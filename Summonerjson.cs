@@ -1,5 +1,5 @@
 // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
-    public class Summoner
+    public class Summoner 
     {
         public string id { get; set; }
         public string accountId { get; set; }

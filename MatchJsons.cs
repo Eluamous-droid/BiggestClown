@@ -221,7 +221,7 @@
         public string tournamentCode { get; set; }
     }
 
-    public class Root
+    public class Match 
     {
         public Metadata metadata { get; set; }
         public Info info { get; set; }
