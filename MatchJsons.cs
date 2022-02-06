@@ -1,8 +1,8 @@
     public class Metadata
     {
-        public string dataVersion { get; set; }
-        public string matchId { get; set; }
-        public List<string> participants { get; set; }
+        public string? dataVersion { get; set; }
+        public string? matchId { get; set; }
+        public List<string>? participants { get; set; }
     }
 
     public class StatPerks
@@ -22,15 +22,15 @@
 
     public class Style
     {
-        public string description { get; set; }
-        public List<Selection> selections { get; set; }
+        public string? description { get; set; }
+        public List<Selection>? selections { get; set; }
         public int style { get; set; }
     }
 
     public class Perks
     {
-        public StatPerks statPerks { get; set; }
-        public List<Style> styles { get; set; }
+        public StatPerks? statPerks { get; set; }
+        public List<Style>? styles { get; set; }
     }
 
     public class Participant
@@ -41,7 +41,7 @@
         public int champExperience { get; set; }
         public int champLevel { get; set; }
         public int championId { get; set; }
-        public string championName { get; set; }
+        public string? championName { get; set; }
         public int championTransform { get; set; }
         public int consumablesPurchased { get; set; }
         public int damageDealtToBuildings { get; set; }
@@ -60,7 +60,7 @@
         public bool gameEndedInSurrender { get; set; }
         public int goldEarned { get; set; }
         public int goldSpent { get; set; }
-        public string individualPosition { get; set; }
+        public string? individualPosition { get; set; }
         public int inhibitorKills { get; set; }
         public int inhibitorTakedowns { get; set; }
         public int inhibitorsLost { get; set; }
@@ -74,7 +74,7 @@
         public int itemsPurchased { get; set; }
         public int killingSprees { get; set; }
         public int kills { get; set; }
-        public string lane { get; set; }
+        public string? lane { get; set; }
         public int largestCriticalStrike { get; set; }
         public int largestKillingSpree { get; set; }
         public int largestMultiKill { get; set; }
@@ -90,16 +90,16 @@
         public int objectivesStolenAssists { get; set; }
         public int participantId { get; set; }
         public int pentaKills { get; set; }
-        public Perks perks { get; set; }
+        public Perks? perks { get; set; }
         public int physicalDamageDealt { get; set; }
         public int physicalDamageDealtToChampions { get; set; }
         public int physicalDamageTaken { get; set; }
         public int profileIcon { get; set; }
-        public string puuid { get; set; }
+        public string? puuid { get; set; }
         public int quadraKills { get; set; }
-        public string riotIdName { get; set; }
-        public string riotIdTagline { get; set; }
-        public string role { get; set; }
+        public string? riotIdName { get; set; }
+        public string? riotIdTagline { get; set; }
+        public string? role { get; set; }
         public int sightWardsBoughtInGame { get; set; }
         public int spell1Casts { get; set; }
         public int spell2Casts { get; set; }
@@ -109,12 +109,12 @@
         public int summoner1Id { get; set; }
         public int summoner2Casts { get; set; }
         public int summoner2Id { get; set; }
-        public string summonerId { get; set; }
+        public string? summonerId { get; set; }
         public int summonerLevel { get; set; }
-        public string summonerName { get; set; }
+        public string? summonerName { get; set; }
         public bool teamEarlySurrendered { get; set; }
         public int teamId { get; set; }
-        public string teamPosition { get; set; }
+        public string? teamPosition { get; set; }
         public int timeCCingOthers { get; set; }
         public int timePlayed { get; set; }
         public int totalDamageDealt { get; set; }
@@ -186,18 +186,18 @@
 
     public class Objectives
     {
-        public Baron baron { get; set; }
-        public Champion champion { get; set; }
-        public Dragon dragon { get; set; }
-        public Inhibitor inhibitor { get; set; }
-        public RiftHerald riftHerald { get; set; }
-        public Tower tower { get; set; }
+        public Baron? baron { get; set; }
+        public Champion? champion { get; set; }
+        public Dragon? dragon { get; set; }
+        public Inhibitor? inhibitor { get; set; }
+        public RiftHerald? riftHerald { get; set; }
+        public Tower? tower { get; set; }
     }
 
     public class Team
     {
-        public List<Ban> bans { get; set; }
-        public Objectives objectives { get; set; }
+        public List<Ban>? bans { get; set; }
+        public Objectives? objectives { get; set; }
         public int teamId { get; set; }
         public bool win { get; set; }
     }
@@ -208,22 +208,22 @@
         public int gameDuration { get; set; }
         public long gameEndTimestamp { get; set; }
         public long gameId { get; set; }
-        public string gameMode { get; set; }
-        public string gameName { get; set; }
+        public string? gameMode { get; set; }
+        public string? gameName { get; set; }
         public long gameStartTimestamp { get; set; }
-        public string gameType { get; set; }
-        public string gameVersion { get; set; }
+        public string? gameType { get; set; }
+        public string? gameVersion { get; set; }
         public int mapId { get; set; }
-        public List<Participant> participants { get; set; }
-        public string platformId { get; set; }
+        public List<Participant>? participants { get; set; }
+        public string? platformId { get; set; }
         public int queueId { get; set; }
-        public List<Team> teams { get; set; }
-        public string tournamentCode { get; set; }
+        public List<Team>? teams { get; set; }
+        public string? tournamentCode { get; set; }
     }
 
     public class Match 
     {
-        public Metadata metadata { get; set; }
-        public Info info { get; set; }
+        public Metadata? metadata { get; set; }
+        public Info? info { get; set; }
     }
 

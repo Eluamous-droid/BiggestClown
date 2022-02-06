@@ -17,7 +17,7 @@ using System.Threading.Tasks;
         /// <returns>A Task with result object of type T</returns>
         public static async Task<T> Get(string url)
         {
-            T result = null;
+            T? result = null;
             using (var httpClient = new HttpClient())
             {
 
@@ -32,12 +32,18 @@ using System.Threading.Tasks;
                 await response.Content.ReadAsStringAsync().ContinueWith((Task<string> x) =>
                 {
                     if (x.IsFaulted)
-                        throw x.Exception;
+                    {
+                        if(x.Exception != null)
+                        {
+                            throw x.Exception;
+                        }
+                        throw new ApplicationException("Rest call failed with no exception");
+                    }
 
                     result = JsonConvert.DeserializeObject<T>   (x.Result);
                 });
             }
             
-            return result;
+            return result != null ? result : default!;
         }
     }
