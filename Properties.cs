@@ -5,18 +5,23 @@ public class Properties
 
     public Properties(String file)
     {
+
+        filename = file;
+        list = new Dictionary<String, String>();
         reload(file);
     }
 
+    #pragma warning disable 8603
     public String get(String field, String defValue)
     {
         return (get(field) == null) ? (defValue) : (get(field));
     }
-    public String get(String field)
+    public String? get(String field)
     {
-        return (list.ContainsKey(field))?(list[field]):(null);
+        return (list.ContainsKey(field)) ? (list[field]) : (null);
     }
 
+    #pragma warning disable 8604, 8601
     public void set(String field, Object value)
     {
         if (!list.ContainsKey(field))
@@ -39,7 +44,7 @@ public class Properties
 
         System.IO.StreamWriter file = new System.IO.StreamWriter(filename);
 
-        foreach(String prop in list.Keys.ToArray())
+        foreach (String prop in list.Keys.ToArray())
             if (!String.IsNullOrWhiteSpace(list[prop]))
                 file.WriteLine(prop + "=" + list[prop]);
 
@@ -48,14 +53,11 @@ public class Properties
 
     public void reload()
     {
-        reload(this.filename);
+        reload(filename);
     }
 
     public void reload(String filename)
     {
-        this.filename = filename;
-        list = new Dictionary<String, String>();
-
         if (System.IO.File.Exists(filename))
             loadFromFile(filename);
         else

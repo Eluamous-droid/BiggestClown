@@ -22,7 +22,12 @@ using System.Threading.Tasks;
             {
 
                 Properties props = new Properties("BiggestClown.properties");
-                string urlParameters = props.get("api_key");
+                string urlParameters = props.get("api_key","");
+                
+                if(urlParameters == "")
+                {
+                    throw new Exception("Missing api key in properties");
+                }
 
                 httpClient.DefaultRequestHeaders.Add("X-Riot-Token",urlParameters);
 
