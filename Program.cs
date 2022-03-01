@@ -15,18 +15,25 @@ namespace BiggestClown
         static void Main(string[] args)
         {
             
-            String summonersProperty = props.get("summoners","Eluamous");
-            String[] summoners = summonersProperty.Split(',');
-            foreach(String summoner in summoners)
-            {
-                HandleSummoner(summoner).GetAwaiter().GetResult();
-            }
-            
+            String summonerNamesToFetch = props.get("summoners","Eluamous");
+            String[] summonerNames = summonerNamesToFetch.Split(',');
+            Summoner[] summoners = GetSummoners(summonerNames).GetAwaiter().GetResult();
+                       
         }
 
-        private static async Task HandleSummoner(String summoner){
-            Summoner sum = await HTTPClientWrapper<Summoner>.Get(URL+summoner);
-            
+        private static async Task<Summoner[]> GetSummoners(String[] summonerNames){
+
+            String url = "https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/";
+            List<Summoner> summoners = new List<Summoner>();
+            foreach(String summoner in summonerNames)
+            {
+                summoners.Add(await HTTPClientWrapper<Summoner>.Get(url+summoner));
+            }
+            return summoners.ToArray();
+        }
+
+        private static async Task HandleMatchHistory(String puuid, int StartTime)
+        {
 
         }
 
