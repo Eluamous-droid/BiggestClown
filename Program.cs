@@ -18,6 +18,8 @@ namespace BiggestClown
             String summonerNamesToFetch = props.get("summoners","Eluamous");
             String[] summonerNames = summonerNamesToFetch.Split(',');
             Summoner[] summoners = GetSummoners(summonerNames).GetAwaiter().GetResult();
+            double lastWeek = DateTime.Now.AddDays(-7).Subtract(new DateTime(1970,1,1)).TotalSeconds;
+            GetMatchHistories(summoners, lastWeek).GetAwaiter().GetResult();
                        
         }
 
@@ -32,7 +34,7 @@ namespace BiggestClown
             return summoners.ToArray();
         }
 
-        private static async Task HandleMatchHistory(String puuid, int StartTime)
+        private static async Task GetMatchHistories(Summoner[] summoners, double StartTime)
         {
 
         }
