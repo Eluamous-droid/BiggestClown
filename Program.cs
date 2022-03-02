@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
+using System.Web;
+using System.Collections.Specialized;
 
 namespace BiggestClown
 {
@@ -18,8 +20,9 @@ namespace BiggestClown
             String summonerNamesToFetch = props.get("summoners","Eluamous");
             String[] summonerNames = summonerNamesToFetch.Split(',');
             Summoner[] summoners = GetSummoners(summonerNames).GetAwaiter().GetResult();
-            double lastWeek = DateTime.Now.AddDays(-7).Subtract(new DateTime(1970,1,1)).TotalSeconds;
-            GetMatchHistories(summoners, lastWeek).GetAwaiter().GetResult();
+            int lastWeek = (int)DateTime.Now.AddDays(-7).Subtract(new DateTime(1970,1,1)).TotalSeconds;
+            Dictionary<string, List<string>> matchHistories = GetMatchHistories(summoners, lastWeek).GetAwaiter().GetResult();
+            Console.WriteLine(matchHistories["Eluamous"][0]);
                        
         }
 
@@ -34,12 +37,30 @@ namespace BiggestClown
             return summoners.ToArray();
         }
 
-        private static async Task GetMatchHistories(Summoner[] summoners, double StartTime)
-        {
-
-        }
-
-
-        
+        private static async Task<Dictionary<string, List<string>>> GetMatchHistories(Summoner[] summoners, double startTime)
+        {      
+            Dictionary<string, List<string>> matchHistories = new Dictionary<string,List<string>>();
+            foreach(Summoner summoner in summoners)
+            {
+                if(summoner.puuid != null){
+                    String puuid = summoner.puuid;
+                    String url = $"https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids";
+                    UriBuilder uriBuilder = new UriBuilder(url);
+                    uriBuilder.Port = -1;
+                    NameValueCollection query = HttpUtility.ParseQueryString(uriBuilder.Query);
+                    query["startTime"] = startTime.ToString();
+                    query["count"] = "100";
+                    
+                    uriBuilder.Query = query.ToString();
+                    List<string> matchHistory = await HTTPClientWrapper<List<string>>.Get(uriBuilder.ToString());
+                    if(matchHistory != null && summoner.name != null)
+                    {
+                        matchHistories.Add(summoner.name,matchHistory);
+                    }
+                }
+                
+            }
+            return matchHistories;
+        }      
     }
 }
