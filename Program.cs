@@ -22,7 +22,10 @@ namespace BiggestClown
             Summoner[] summoners = GetSummoners(summonerNames).GetAwaiter().GetResult();
             int lastWeek = (int)DateTime.Now.AddDays(-7).Subtract(new DateTime(1970,1,1)).TotalSeconds;
             Dictionary<string, List<string>> matchHistories = GetMatchHistories(summoners, lastWeek).GetAwaiter().GetResult();
+
             Console.WriteLine(matchHistories["Eluamous"][0]);
+
+            GetMatches(matchHistories).GetAwaiter().GetResult();
                        
         }
 
@@ -61,6 +64,20 @@ namespace BiggestClown
                 
             }
             return matchHistories;
+        }
+
+        private static async Task<Summoner[]> GetMatches(Dictionary<string, List<string>> matchHistories){
+
+            String url = "https://europe.api.riotgames.com/lol/match/v5/matches/";
+            foreach(KeyValuePair<string,List<string>> summoner in matchHistories)
+            {
+                foreach(string matchId in summoner.Value)
+                {
+                    Match match = await HTTPClientWrapper<Match>.Get(url+matchId);
+                    Console.WriteLine(match.info.gameMode);
+                }
+            }
+            return null;
         }      
     }
 }
