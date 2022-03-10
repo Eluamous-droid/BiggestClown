@@ -34,12 +34,13 @@ namespace BiggestClown
                 player.lossCounter = getLossCounter(player);
                 players.Add(player);
                 //To avoid api call limit
-                //Thread.Sleep(60000);
+                Thread.Sleep(60000);
             }
 
             foreach(Player player in players)
             {
-                Console.WriteLine("Player: {0} Loss: {1}", player.summonerName, player.lossCounter);
+                int winRate = 100 - (int)(((float)player.lossCounter/(float)player.matchIds.Count) * 100);
+                Console.WriteLine("Player: {0} Loss: {1}, Winrate: {2}%", player.summonerName, player.lossCounter, winRate);
             }
         }
 
