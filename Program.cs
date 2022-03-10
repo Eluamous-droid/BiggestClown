@@ -82,7 +82,7 @@ namespace BiggestClown
             int lossCounter = 0;
             foreach (Match match in player.matches)
             {
-                if (match.info != null && match.info.participants != null)
+                if (match.info?.participants != null)
                     foreach (Participant participant in match.info.participants)
                     {
                         if (participant.summonerName != null && participant.summonerName.Equals(player.summonerName) && !participant.win)
