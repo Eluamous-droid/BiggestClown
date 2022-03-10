@@ -15,64 +15,59 @@ namespace BiggestClown
         static HttpClient client = new HttpClient();
         static void Main(string[] args)
         {
-            
-            String summonerNamesToFetch = props.get("summoners","Eluamous");
-            String[] summonerNames = summonerNamesToFetch.Split(',');
-            Summoner[] summoners = GetSummoners(summonerNames).GetAwaiter().GetResult();
-            int lastWeek = (int)DateTime.Now.AddDays(-7).Subtract(new DateTime(1970,1,1)).TotalSeconds;
-            Dictionary<string, List<string>> matchHistories = GetMatchHistories(summoners, lastWeek).GetAwaiter().GetResult();
 
-            Dictionary<string, List<Match>> completeMatchHistories = new Dictionary<string, List<Match>>();
-
-            foreach(KeyValuePair<string,List<string>> summoner in matchHistories)
+            int lastWeek = (int)DateTime.Now.AddDays(-7).Subtract(new DateTime(1970,1,1)).TotalSeconds;           
+            String summonerNamesToGet = props.get("summoners","Eluamous");
+            String[] summonerNames = summonerNamesToGet.Split(',');
+            List<Player> players = new List<Player>();
+            foreach(String summonerName in summonerNames)
             {
-                Thread.Sleep(60000);
-                completeMatchHistories.Add(summoner.Key, new List<Match>());
-                foreach(string matchId in summoner.Value)
+                Player player = new Player();
+                player.summonerName = summonerName;
+                player.summoner = GetSummoner(summonerName).GetAwaiter().GetResult();
+                player.matchIds = GetMatchHistory(player.summoner, lastWeek).GetAwaiter().GetResult();
+                player.matches = new List<Match>();
+                foreach(String matchId in player.matchIds)
                 {
-                    completeMatchHistories[summoner.Key].Add(GetMatch(matchId).GetAwaiter().GetResult());  
+                    player.matches.Add(GetMatch(matchId).GetAwaiter().GetResult());
                 }
+                player.lossCounter = getLossCounter(player);
+                players.Add(player);
+                //To avoid api call limit
+                //Thread.Sleep(60000);
             }
 
-            Dictionary<string,int> lossCounter = getLossCounter(completeMatchHistories);
-
+            foreach(Player player in players)
+            {
+                Console.WriteLine("Player: {0} Loss: {1}", player.summonerName, player.lossCounter);
+            }
         }
 
-        private static async Task<Summoner[]> GetSummoners(String[] summonerNames){
+        private static async Task<Summoner> GetSummoner(String summonerName){
 
             String url = "https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/";
             List<Summoner> summoners = new List<Summoner>();
-            foreach(String summoner in summonerNames)
-            {
-                summoners.Add(await HTTPClientWrapper<Summoner>.Get(url+summoner));
-            }
-            return summoners.ToArray();
+            Summoner summoner = await HTTPClientWrapper<Summoner>.Get(url+summonerName);
+            return summoner;
         }
 
-        private static async Task<Dictionary<string, List<string>>> GetMatchHistories(Summoner[] summoners, double startTime)
-        {      
-            Dictionary<string, List<string>> matchHistories = new Dictionary<string,List<string>>();
-            foreach(Summoner summoner in summoners)
+        private static async Task<List<string>> GetMatchHistory(Summoner summoner, double startTime)
+        {
+            List<string> matchHistory = new List<string>();
+            if (summoner.puuid != null)
             {
-                if(summoner.puuid != null){
-                    String puuid = summoner.puuid;
-                    String url = $"https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids";
-                    UriBuilder uriBuilder = new UriBuilder(url);
-                    uriBuilder.Port = -1;
-                    NameValueCollection query = HttpUtility.ParseQueryString(uriBuilder.Query);
-                    query["startTime"] = startTime.ToString();
-                    query["count"] = "100";
-                    
-                    uriBuilder.Query = query.ToString();
-                    List<string> matchHistory = await HTTPClientWrapper<List<string>>.Get(uriBuilder.ToString());
-                    if(matchHistory != null && summoner.name != null)
-                    {
-                        matchHistories.Add(summoner.name,matchHistory);
-                    }
-                }
-                
+                String puuid = summoner.puuid;
+                String url = $"https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids";
+                UriBuilder uriBuilder = new UriBuilder(url);
+                uriBuilder.Port = -1;
+                NameValueCollection query = HttpUtility.ParseQueryString(uriBuilder.Query);
+                query["startTime"] = startTime.ToString();
+                query["count"] = "100";
+
+                uriBuilder.Query = query.ToString();
+                matchHistory = await HTTPClientWrapper<List<string>>.Get(uriBuilder.ToString());
             }
-            return matchHistories;
+            return matchHistory;
         }
 
         private static async Task<Match> GetMatch(String matchId){
@@ -81,27 +76,21 @@ namespace BiggestClown
             return await HTTPClientWrapper<Match>.Get(url+matchId);
         }
 
-        private static Dictionary<string,int> getLossCounter(Dictionary<string, List<Match>> completeMatchHistories)
+        private static int getLossCounter(Player player)
         {
-            Dictionary<string,int> lossCounter = new Dictionary<string, int>();
-            foreach(String player in completeMatchHistories.Keys)
+            int lossCounter = 0;
+            foreach (Match match in player.matches)
             {
-                lossCounter.Add(player,0);
-                foreach(Match match in completeMatchHistories[player])
-                {
-                    if(match.info != null && match.info.participants != null)
-                    foreach(Participant participant in match.info.participants)
+                if (match.info != null && match.info.participants != null)
+                    foreach (Participant participant in match.info.participants)
                     {
-                        if(participant.summonerName != null && participant.summonerName.Equals(player) && !participant.win)
+                        if (participant.summonerName != null && participant.summonerName.Equals(player.summonerName) && !participant.win)
                         {
-                            lossCounter[player]++;
+                            lossCounter++;
                         }
                     }
-                }
-
             }
-
             return lossCounter;
-        }    
+        }
     }
 }
