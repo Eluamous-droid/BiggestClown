@@ -22,17 +22,7 @@ namespace BiggestClown
             List<Player> players = new List<Player>();
             foreach(String summonerName in summonerNames)
             {
-                Player player = new Player();
-                player.summonerName = summonerName;
-                player.summoner = GetSummoner(summonerName).GetAwaiter().GetResult();
-                player.matchIds = GetMatchHistory(player.summoner, lastWeek).GetAwaiter().GetResult();
-                player.matches = new List<Match>();
-                foreach(String matchId in player.matchIds)
-                {
-                    player.matches.Add(GetMatch(matchId).GetAwaiter().GetResult());
-                }
-                player.lossCounter = getLossCounter(player);
-                players.Add(player);
+                players.Add(buildPlayer(summonerName, lastWeek));
                 //To avoid api call limit
                 Thread.Sleep(60000);
             }
@@ -92,6 +82,22 @@ namespace BiggestClown
                     }
             }
             return lossCounter;
+        }
+
+        private static Player buildPlayer(string summonerName, int fromDate)
+        {
+            Player player = new Player();
+            player.summonerName = summonerName;
+            player.summoner = GetSummoner(summonerName).GetAwaiter().GetResult();
+            player.matchIds = GetMatchHistory(player.summoner, fromDate).GetAwaiter().GetResult();
+            player.matches = new List<Match>();
+            foreach (String matchId in player.matchIds)
+            {
+                player.matches.Add(GetMatch(matchId).GetAwaiter().GetResult());
+            }
+            player.lossCounter = getLossCounter(player);
+
+            return player;
         }
     }
 }
