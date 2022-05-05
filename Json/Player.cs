@@ -1,6 +1,6 @@
-using BiggestClown.Models.Riot;
+using BiggestClown.Json.Riot;
 
-namespace BiggestClown.Models;
+namespace BiggestClown.Json;
 
 public struct Player
 {

@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Collections.Specialized;
-using BiggestClown.Models;
-using BiggestClown.Models.Riot;
+using BiggestClown.Json;
+using BiggestClown.Json.Riot;
 
 namespace BiggestClown
 {

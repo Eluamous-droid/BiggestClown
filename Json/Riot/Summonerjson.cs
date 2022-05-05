@@ -1,4 +1,4 @@
-  namespace BiggestClown.Models.Riot;
+  namespace BiggestClown.Json.Riot;
     public class Summoner 
     {
         public string? id { get; set; }

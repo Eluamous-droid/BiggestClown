@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace BiggestClown.Models.Riot;
+namespace BiggestClown.Json.Riot;
     public class MatchHistory 
     {
         public List<string>? Matches { get; set; }

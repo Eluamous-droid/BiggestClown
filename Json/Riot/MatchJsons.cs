@@ -1,4 +1,4 @@
-  namespace BiggestClown.Models.Riot;
+  namespace BiggestClown.Json.Riot;
   
     public class Metadata
     {
