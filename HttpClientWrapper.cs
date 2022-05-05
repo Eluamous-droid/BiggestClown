@@ -15,21 +15,15 @@ using System.Threading.Tasks;
         /// </summary>
         /// <param name="url">API Url</param>
         /// <returns>A Task with result object of type T</returns>
-        public static async Task<T> Get(string url)
+        public static async Task<T> Get(string url, String apiKey)
         {
             T? result = null;
             using (var httpClient = new HttpClient())
             {
 
-                Properties props = new Properties("BiggestClown.properties");
-                string urlParameters = props.get("api_key","");
                 
-                if(urlParameters == "")
-                {
-                    throw new Exception("Missing api key in properties");
-                }
 
-                httpClient.DefaultRequestHeaders.Add("X-Riot-Token",urlParameters);
+                httpClient.DefaultRequestHeaders.Add("X-Riot-Token",apiKey);
 
                 var response = httpClient.GetAsync(new Uri(url)).Result;
 

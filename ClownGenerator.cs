@@ -11,6 +11,8 @@ namespace BiggestClown
     class ClownGenerator
     {
         private static Properties props = new Properties("BiggestClown.properties");
+        private static String apiKey = props.get("api_key","");
+        
 
         private static List<Player> getSortedListOfClowns(){
             int lastWeek = (int)DateTime.Now.AddDays(-7).Subtract(new DateTime(1970,1,1)).TotalSeconds;           
@@ -46,7 +48,7 @@ namespace BiggestClown
 
             String url = "https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/";
             List<Summoner> summoners = new List<Summoner>();
-            Summoner summoner = await HTTPClientWrapper<Summoner>.Get(url+summonerName);
+            Summoner summoner = await HTTPClientWrapper<Summoner>.Get(url+summonerName, apiKey);
             return summoner;
         }
 
@@ -64,7 +66,7 @@ namespace BiggestClown
                 query["count"] = "100";
 
                 uriBuilder.Query = query.ToString();
-                matchHistory = await HTTPClientWrapper<List<string>>.Get(uriBuilder.ToString());
+                matchHistory = await HTTPClientWrapper<List<string>>.Get(uriBuilder.ToString(), apiKey);
             }
             return matchHistory;
         }
@@ -72,7 +74,7 @@ namespace BiggestClown
         private static async Task<Match> GetMatch(String matchId){
 
             String url = "https://europe.api.riotgames.com/lol/match/v5/matches/";
-            return await HTTPClientWrapper<Match>.Get(url+matchId);
+            return await HTTPClientWrapper<Match>.Get(url+matchId, apiKey);
         }
 
         private static int getLossCounter(Player player)
