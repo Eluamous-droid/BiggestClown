@@ -1,3 +1,7 @@
+using BiggestClown.Models.Riot;
+
+namespace BiggestClown.Models;
+
 public struct Player
 {
     public string puuid {get;set;}

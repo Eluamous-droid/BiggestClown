@@ -1,4 +1,4 @@
-// Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+  namespace BiggestClown.Models.Riot;
     public class Summoner 
     {
         public string? id { get; set; }

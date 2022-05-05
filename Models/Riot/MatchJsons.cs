@@ -1,3 +1,5 @@
+  namespace BiggestClown.Models.Riot;
+  
     public class Metadata
     {
         public string? dataVersion { get; set; }
