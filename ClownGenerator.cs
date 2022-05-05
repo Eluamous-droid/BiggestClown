@@ -3,15 +3,14 @@ using System.Collections.Specialized;
 using BiggestClown.Json;
 using BiggestClown.Json.Riot;
 
-namespace BiggestClown
-{
+namespace BiggestClown;
     class ClownGenerator
     {
         private static Properties props = new Properties("BiggestClown.properties");
         private static String apiKey = props.get("api_key","");
         
 
-        private static List<Player> getSortedListOfClowns(){
+        public static List<Player> getSortedListOfClowns(){
             int lastWeek = (int)DateTime.Now.AddDays(-7).Subtract(new DateTime(1970,1,1)).TotalSeconds;           
             String summonerNamesToGet = props.get("summoners","Eluamous");
             String[] summonerNames = summonerNamesToGet.Split(',');
@@ -20,7 +19,7 @@ namespace BiggestClown
             {
                 players.Add(buildPlayer(summonerName, lastWeek));
                 //To avoid api call limit
-                Thread.Sleep(60000);
+                //Thread.Sleep(60000);
             }
             return players = Sort.sortPlayersByLossCount(players);
         }
@@ -93,4 +92,4 @@ namespace BiggestClown
 
         
     }
-}
+
