@@ -1,17 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using BiggestClown.Json;
-using BiggestClown;
 
 namespace BiggestClown.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class BiggsetClownController : ControllerBase
+public class BiggestClownController : ControllerBase
 {
 
-    private readonly ILogger<BiggsetClownController> _logger;
+    private readonly ILogger<BiggestClownController> _logger;
 
-    public BiggsetClownController(ILogger<BiggsetClownController> logger)
+    public BiggestClownController(ILogger<BiggestClownController> logger)
     {
         _logger = logger;
     }
@@ -23,4 +22,5 @@ public class BiggsetClownController : ControllerBase
         return players;
 
     }
+
 }
